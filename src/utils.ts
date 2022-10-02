@@ -1,30 +1,12 @@
-interface Folder {
+export interface Folder {
   title: string;
   files: Folder[] | string[];
 }
 
 export const isFile = (f: unknown): f is string => typeof f === "string";
 
-const makeFolderFilenames = (folder: Folder): string[] => {
-  const filenames: string[] = [];
-  folder.files.forEach((f) => {
-    if (!isFile(f)) {
-      filenames.push(...makeFolderFilenames(f));
-    } else {
-      filenames.push(f);
-    }
-  });
-  return filenames.map((f) => `${folder.title}/${f}`).concat([folder.title]);
-};
-
-export const makeFilenames = (folders: Folder[]): string[] => {
-  const filenames: string[] = [];
-  folders.forEach((f) => filenames.push(...makeFolderFilenames(f)));
-  return filenames;
-};
-
 export const makeHighestTarget = (filenames: string[]): string[] => {
-  filenames.sort();
+  filenames = Array.from(filenames);
   const out: string[][] = [];
   filenames.forEach((f) => {
     const parts = f.split("/");
@@ -32,7 +14,7 @@ export const makeHighestTarget = (filenames: string[]): string[] => {
     if (found) return;
     out.push(parts);
   });
-  return out.map((o) => o.join("/")).sort((a, b) => a.length - b.length);
+  return out.map((o) => o.join("/"));
 };
 
 const findResult = (
@@ -46,7 +28,6 @@ const findResult = (
     const f = files[i];
     if (isFile(f)) {
       if (files[i] === parts[0]) {
-        console.log(`${title}/${parts[0]}`);
         return { fullTitle: `${title}/${parts[0]}`, result: files[i] };
       }
     } else if (f.title === parts[0]) {

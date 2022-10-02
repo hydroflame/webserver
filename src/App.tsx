@@ -1,45 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { Toolbar } from "./Toolbar";
-import AllFiles from "./example.json";
 import fuzzysort from "fuzzysort";
 import {
   copyToClipboard,
-  makeFilenames,
+  Folder,
+  isFile,
   makeHighestTarget,
   mapSearchResult,
 } from "./utils";
 import { Box } from "@mui/system";
 import { TreeView } from "@mui/lab";
 import { Node } from "./Node";
-import { Snackbar } from "./Snackbar";
+import { dispatchCopy } from "./CurrentSelection";
+import { Typography } from "@mui/material";
 
-function App() {
-  const [files, setFiles] = useState(AllFiles);
+function App({ files }: { files: string[] }) {
   const [search, setSearch] = useState("");
-  const allFilenames = makeFilenames(AllFiles);
+
   const results = search
-    ? fuzzysort.go(search, allFilenames).map((f) => f.target)
-    : allFilenames;
+    ? fuzzysort.go(search, files).map((f) => f.target)
+    : files;
   const filenames = makeHighestTarget(results);
-  const output = mapSearchResult(filenames, AllFiles);
+  // const output = mapSearchResult(filenames, files);
 
   useEffect(() => {
-    const r = output[0];
+    const r = filenames[0];
     if (!r) return;
-    copyToClipboard(r.fullTitle);
+    dispatchCopy(r);
   });
 
   return (
     <>
       <Toolbar search={search} setSearch={(v: string) => setSearch(v)} />
       <Box sx={{ padding: "1em" }}>
-        <TreeView>
-          {output.map((f, i) => (
-            <Node key={i} node={f} />
-          ))}
-        </TreeView>
+        {filenames.map((r) => (
+          <Typography key={r}>{r}</Typography>
+        ))}
+        {/* {output.map((f, i) => (
+          <Node key={i} node={f} />
+        ))} */}
       </Box>
-      <Snackbar />
     </>
   );
 }

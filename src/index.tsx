@@ -4,6 +4,7 @@ import App from "./App";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Loader } from "./Loader";
 
 const darkTheme = createTheme({
   palette: {
@@ -18,7 +19,7 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <App />
+      <Loader />
     </ThemeProvider>
   </React.StrictMode>
 );
