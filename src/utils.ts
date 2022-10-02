@@ -58,21 +58,20 @@ export const mapSearchResult = (
 
 export const copyToClipboard = (s: string): void => {
   // navigator clipboard api needs a secure context (https)
-  if (navigator.clipboard && window.isSecureContext) {
-    // navigator clipboard api method'
-    navigator.clipboard.writeText(s);
-  } else {
-    // text area method
-    let textArea = document.createElement("textarea");
-    textArea.value = s;
-    // make the textarea out of viewport
-    textArea.style.position = "fixed";
-    textArea.style.left = "-999999px";
-    textArea.style.top = "-999999px";
-    document.body.appendChild(textArea);
-
-    textArea.select();
-    document.execCommand("copy");
-    textArea.remove();
-  }
+  // if (navigator.clipboard && window.isSecureContext) {
+  //   // navigator clipboard api method'
+  //   navigator.clipboard.writeText(s);
+  // } else {
+  // text area method
+  let textArea = document.createElement("textarea");
+  textArea.value = s;
+  // make the textarea out of viewport
+  textArea.style.position = "fixed";
+  textArea.style.left = "-999999px";
+  textArea.style.top = "-999999px";
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  textArea.remove();
+  // }
 };

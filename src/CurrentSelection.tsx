@@ -3,6 +3,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import React, { useState, useEffect } from "react";
 import { copyToClipboard } from "./utils";
 import { config } from "./config";
+import { dispatchFocus } from "./Toolbar";
 
 const EVENT_TYPE = "COPY";
 export const dispatchCopy = (link: string): void => {
@@ -29,6 +30,7 @@ export const CurrentSelection = (): React.ReactElement => {
           message
         )}.xspf`
       );
+      dispatchFocus();
     });
   }, []);
 
