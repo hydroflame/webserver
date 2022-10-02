@@ -37,9 +37,10 @@ const FolderNode = ({ file, filenames, root }: IProps): React.ReactElement => {
       <summary onClick={onClick}>{title}</summary>
 
       <fieldset>
-        {targets.map((c, i) =>
-          open ? <Node key={i} file={c} filenames={filenames} /> : <></>
-        )}
+        {open &&
+          targets.map((c, i) => (
+            <Node key={i} file={c} filenames={filenames} />
+          ))}
       </fieldset>
     </details>
   );
