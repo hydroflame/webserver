@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import App from "./App";
 import { config } from "./config";
@@ -29,7 +29,19 @@ export const Loader = (): React.ReactElement => {
     });
   }, []);
   if (!error && folders.length === 0) {
-    return <Typography>Loading</Typography>;
+    return (
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        style={{ minHeight: "100vh" }}
+      >
+        <Grid item>
+          <CircularProgress size={300} color="primary" />
+        </Grid>
+      </Grid>
+    );
   }
   if (error) {
     return <Typography>{error}</Typography>;
