@@ -19,14 +19,16 @@ export const Loader = (): React.ReactElement => {
   const [folders, setFolders] = useState<string[]>([]);
   const [error, setError] = useState("");
   useEffect(() => {
-    fetch(`http://${config.host}/api/files`).then(async (f) => {
-      const resp = await f.json();
-      if ("error" in resp) {
-        setError(resp.error);
-      } else {
-        setFolders(generateAllFiles(resp));
+    fetch(`http://${config.host || location.host}/api/files`).then(
+      async (f) => {
+        const resp = await f.json();
+        if ("error" in resp) {
+          setError(resp.error);
+        } else {
+          setFolders(generateAllFiles(resp));
+        }
       }
-    });
+    );
   }, []);
   if (!error && folders.length === 0) {
     return (
