@@ -21,15 +21,14 @@ function App({ files }: { files: string[] }) {
   const results = search
     ? fuzzysort.go(search, files).map((f) => f.target)
     : files;
-  const filenames = makeHighestTarget(results);
-  // const output = mapSearchResult(filenames, files);
+  const targets = makeHighestTarget(results);
 
   const onChange = React.useRef(
     debounce((v: string) => setSearch(v), 300)
   ).current;
 
   useEffect(() => {
-    const r = filenames[0];
+    const r = targets[0];
     if (!r) return;
     dispatchCopy(r);
   });
@@ -38,12 +37,12 @@ function App({ files }: { files: string[] }) {
     <>
       <Toolbar search={search} setSearch={onChange} />
       <Box sx={{ padding: "1em" }}>
-        {filenames.map((r) => (
+        {/* {filenames.map((r) => (
           <Typography key={r}>{r}</Typography>
-        ))}
-        {/* {output.map((f, i) => (
-          <Node key={i} node={f} />
         ))} */}
+        {targets.map((f, i) => (
+          <Node key={i} file={f} filenames={files} root={true} />
+        ))}
       </Box>
     </>
   );

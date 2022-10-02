@@ -1,36 +1,46 @@
 import { Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { dispatchCopy } from "./CurrentSelection";
-import { isFile, SearchResult } from "./utils";
+import { isFile, makeHighestTarget, SearchResult } from "./utils";
 
 interface IProps {
-  node: SearchResult;
+  file: string;
+  filenames: string[];
+  root?: boolean;
 }
-export const Node = ({ node }: IProps): React.ReactElement => {
+export const Node = ({ file, filenames, root }: IProps): React.ReactElement => {
+  const children = filenames.filter((f) => f.startsWith(file + "/"));
   const onClick = () => {
-    dispatchCopy(node.fullTitle);
+    dispatchCopy(file);
   };
-  const r = node.result;
-  if (isFile(r)) {
-    return <Typography onClick={onClick}>{node.fullTitle}</Typography>;
+  if (children.length === 0) {
+    const title = root ? file : file.slice(file.lastIndexOf("/") + 1);
+    return <Typography onClick={onClick}>{title}</Typography>;
   } else {
-    return (
-      <details onClick={onClick}>
-        <summary>{node.fullTitle}</summary>
-
-        <fieldset>
-          {r.files.map((f, i) =>
-            isFile(f) ? (
-              <Node
-                key={i}
-                node={{ fullTitle: `${r.title}/${f}`, result: f }}
-              />
-            ) : (
-              <Node key={i} node={{ fullTitle: f.title, result: f }} />
-            )
-          )}
-        </fieldset>
-      </details>
-    );
+    return <FolderNode file={file} filenames={children} root={root} />;
   }
+};
+
+const FolderNode = ({ file, filenames, root }: IProps): React.ReactElement => {
+  const [open, setOpen] = useState(false);
+
+  const targets = makeHighestTarget(filenames);
+
+  const onClick = (event: any) => {
+    event.preventDefault();
+    setOpen((o) => !o);
+    dispatchCopy(file);
+  };
+  const title = root ? file : file.slice(file.lastIndexOf("/") + 1);
+  return (
+    <details open={open}>
+      <summary onClick={onClick}>{title}</summary>
+
+      <fieldset>
+        {targets.map((c, i) =>
+          open ? <Node key={i} file={c} filenames={filenames} /> : <></>
+        )}
+      </fieldset>
+    </details>
+  );
 };
